@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cre8Learn Institute // Python Practical Exam Paper</title>
+  <style>
+    :root {
+      --bg: #0a0e0a;
+      --panel: #0f140f;
+      --panel-edge: #1f2a1f;
+      --green: #4cde7a;
+      --green-dim: #2d7a3d;
+      --amber: #d4b85a;
+      --red: #d95c5a;
+      --text: #d0e0d0;
+      --text-dim: #6f8a72;
+      --blue: #4a8cde;
+      --mono: "JetBrains Mono", "Fira Code", "SF Mono", "Consolas", monospace;
+      --serif: "Georgia", "Times New Roman", serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 50% 0%, #0d1a12 0%, var(--bg) 60%);
+      color: var(--text);
+      font-family: var(--mono);
+      line-height: 1.6;
+      padding: 0 0 80px;
+    }
+    .scanlines {
+      pointer-events: none; position: fixed; inset: 0;
+      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+      mix-blend-mode: overlay; z-index: 50;
+    }
+
+    /* ==== GATE ==== */
+    .gate-overlay { position: fixed; inset: 0; background: rgba(10, 14, 10, 0.96); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .gate-box { background: var(--panel); border: 1px solid var(--green-dim); border-radius: 10px; padding: 36px 32px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 0 60px rgba(76, 222, 122, 0.15); }
+    .gate-box h2 { color: var(--green); font-size: 20px; margin: 0 0 8px 0; }
+    .gate-box p { color: var(--text-dim); font-size: 13px; margin: 0 0 20px 0; }
+    .gate-box input { background: #0d1310; border: 1px solid var(--panel-edge); color: var(--text); font-family: var(--mono); font-size: 15px; padding: 12px 16px; border-radius: 6px; width: 100%; outline: none; text-align: center; letter-spacing: 2px; margin-bottom: 14px; }
+    .gate-box input:focus { border-color: var(--green); box-shadow: 0 0 15px rgba(76, 222, 122, 0.15); }
+    .gate-box button { font-family: var(--mono); font-size: 14px; padding: 12px 28px; border-radius: 6px; border: 1px solid var(--green-dim); background: transparent; color: var(--green); cursor: pointer; letter-spacing: 0.5px; transition: all 0.15s; width: 100%; }
+    .gate-box button:hover { background: var(--green); color: #08110c; }
+    .gate-error { color: var(--red); font-size: 12px; margin-top: 10px; min-height: 16px; }
+
+    /* ==== PAPER ==== */
+    .paper {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #f8f5ee;
+      color: #1a1a1a;
+      padding: 50px 60px 60px;
+      border-radius: 4px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      font-family: var(--serif);
+      line-height: 1.65;
+      position: relative;
+    }
+    .paper::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(to right, #2d7a3d, #4cde7a, #d4b85a);
+      border-radius: 4px 4px 0 0;
+    }
+    .paper-head {
+      text-align: center;
+      padding-bottom: 18px;
+      border-bottom: 2px solid #1a1a1a;
+      margin-bottom: 24px;
+    }
+    .paper-head .logo {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: #2d7a3d;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .paper-head h1 {
+      font-family: var(--serif);
+      font-size: 26px;
+      margin: 6px 0 4px;
+      color: #1a1a1a;
+      letter-spacing: 0.5px;
+    }
+    .paper-head h2 {
+      font-size: 16px;
+      font-weight: normal;
+      color: #444;
+      margin: 0 0 12px;
+      font-style: italic;
+    }
+    .paper-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #333;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #ccc;
+    }
+    .paper-meta div { text-align: left; }
+    .paper-meta div strong { color: #1a1a1a; }
+
+    .student-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 30px;
+      margin: 22px 0 26px;
+      padding: 16px 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .student-info .field { display: flex; align-items: baseline; gap: 8px; }
+    .student-info .field label { color: #333; white-space: nowrap; font-weight: bold; }
+    .student-info .field .line { flex: 1; border-bottom: 1px solid #888; min-width: 80px; }
+
+    .instructions {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-left: 4px solid #2d7a3d;
+      padding: 16px 22px;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 30px;
+    }
+    .instructions h3 {
+      font-family: var(--mono);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #2d7a3d;
+      margin: 0 0 10px;
+    }
+    .instructions ol {
+      margin: 0;
+      padding-left: 22px;
+      font-size: 14px;
+      color: #333;
+    }
+    .instructions ol li { margin-bottom: 5px; }
+
+    .section-title {
+      font-family: var(--mono);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #2d7a3d;
+      margin: 32px 0 14px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+    }
+    .section-title .marks-badge {
+      background: #2d7a3d;
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .question {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      page-break-inside: avoid;
+    }
+    .question-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #ccc;
+    }
+    .question-head h4 {
+      font-family: var(--serif);
+      font-size: 17px;
+      margin: 0;
+      color: #1a1a1a;
+    }
+    .question-head .q-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #2d7a3d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .question-head .q-marks {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #d4b85a;
+      background: #1a1a1a;
+      padding: 3px 10px;
+      border-radius: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .question p.desc {
+      font-size: 14px;
+      color: #333;
+      margin: 0 0 12px;
+    }
+    .question .req-list {
+      background: #f4f8f4;
+      border-left: 3px solid #2d7a3d;
+      padding: 10px 16px;
+      margin: 10px 0 12px;
+      border-radius: 0 4px 4px 0;
+    }
+    .question .req-list .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #2d7a3d;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .question .req-list ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13.5px;
+      color: #333;
+    }
+    .question .req-list ul li { margin-bottom: 3px; }
+    .question .sample {
+      background: #1a1a1a;
+      color: #d0e0d0;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-top: 12px;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .question .sample .label {
+      color: #4cde7a;
+      display: block;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 10px;
+    }
+
+    .answer-space {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #fafafa;
+      border: 1px dashed #bbb;
+      border-radius: 4px;
+      min-height: 60px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .paper-foot {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #1a1a1a;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 0.5px;
+    }
+    .paper-foot strong { color: #1a1a1a; }
+
+    .controls-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(10, 14, 10, 0.95);
+      border-top: 1px solid var(--panel-edge);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      z-index: 100;
+      backdrop-filter: blur(6px);
+    }
+    .controls-bar button {
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 11px 24px;
+      border-radius: 6px;
+      border: 1px solid var(--green-dim);
+      background: transparent;
+      color: var(--green);
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+    }
+    .controls-bar button:hover { background: var(--green); color: #08110c; }
+    .controls-bar button.alt { border-color: var(--blue); color: var(--blue); }
+    .controls-bar button.alt:hover { background: var(--blue); color: #08110c; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .scanlines, .controls-bar, .gate-overlay { display: none !important; }
+      .paper { box-shadow: none; margin: 0; max-width: 100%; padding: 30px 40px; border-radius: 0; }
+      .paper::before { display: none; }
+      .question { page-break-inside: avoid; }
+    }
+
+    @media (max-width: 700px) {
+      .paper { padding: 30px 22px; margin: 20px 10px; }
+      .student-info { grid-template-columns: 1fr; }
+      .paper-head h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+<div class="scanlines"></div>
+
+<div class="gate-overlay" id="gate">
+  <div class="gate-box">
+    <h2>🔒 access required</h2>
+    <p>Enter the access code to view the exam paper</p>
+    <input type="text" id="accessCode" placeholder="access code" autocomplete="off" spellcheck="false" />
+    <button id="unlockBtn">unlock paper</button>
+    <div class="gate-error" id="gateError"></div>
+  </div>
+</div>
+
+<div class="paper" id="paper" style="display:none;">
+
+  <div class="paper-head">
+    <div class="logo">◆ Cre8Learn Institute ◆</div>
+    <h1>Python Programming</h1>
+    <h2>Practical Project Examination</h2>
+    <div class="paper-meta">
+      <div><strong>Module:</strong> Introduction to Python Programming</div>
+      <div><strong>Duration:</strong> 1 Hour</div>
+      <div><strong>Total Marks:</strong> 100</div>
+    </div>
+  </div>
+
+  <div class="student-info">
+    <div class="field"><label>Name:</label><span class="line"></span></div>
+    <div class="field"><label>Student No:</label><span class="line"></span></div>
+    <div class="field"><label>Date:</label><span class="line"></span></div>
+    <div class="field"><label>Signature:</label><span class="line"></span></div>
+  </div>
+
+  <div class="instructions">
+    <h3>Instructions to Candidates</h3>
+    <ol>
+      <li>Answer <strong>ALL</strong> questions in this paper.</li>
+      <li>Write your code in a Python IDE of your choice (IDLE, VS Code, PyCharm, or online).</li>
+      <li>Save each program with a clear filename: <code>q1_library.py</code>, <code>q2_grades.py</code>, etc.</li>
+      <li>Your code must be <strong>complete, runnable, and produce the expected output</strong>.</li>
+      <li>Marks are awarded for correct logic, proper structure, and matching output.</li>
+      <li>Submit all <code>.py</code> files to the instructor at the end of the session.</li>
+      <li>No internet access allowed except for the Python interpreter.</li>
+    </ol>
+  </div>
+
+  <div class="section-title">
+    Section A: Project Questions
+    <span class="marks-badge">8 Projects · 100 Marks</span>
+  </div>
+
+  <!-- Q1 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 1</span>
+        <h4>Library Management System</h4>
+      </div>
+      <span class="q-marks">15 marks</span>
+    </div>
+    <p class="desc">Build a simple library system that manages books. The system should allow adding books, borrowing books, returning books, and displaying all books with their availability status.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Create a class <code>Book</code> with attributes: title, author, available (boolean)</li>
+        <li>Create a class <code>Library</code> that stores a list of books</li>
+        <li>Method <code>add_book(title, author)</code></li>
+        <li>Method <code>borrow_book(title)</code> marks book as unavailable</li>
+        <li>Method <code>return_book(title)</code> marks book as available</li>
+        <li>Method <code>show_books()</code> prints all books with their status</li>
+        <li>Demonstrate with at least 3 books and 2 transactions</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>Book added: The Hobbit
+Book added: 1984
+Borrowed: The Hobbit
+Available books:
+1984 - Available
+The Hobbit - Borrowed</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 2</span>
+        <h4>Student Grade Tracker</h4>
+      </div>
+      <span class="q-marks">12 marks</span>
+    </div>
+    <p class="desc">Create a program that tracks student grades. The program should accept multiple students with their scores, calculate the class average, and identify the highest and lowest scoring students.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Use a dictionary to store student names and their scores</li>
+        <li>Include at least 4 students</li>
+        <li>Calculate the class average</li>
+        <li>Find the highest scoring student</li>
+        <li>Find the lowest scoring student</li>
+        <li>Print all results in a clearly formatted way</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>Students: Alice:85, Bob:92, Carol:78, Dave:88
+Average: 85.75
+Highest: Bob (92)
+Lowest: Carol (78)</div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 3</span>
+        <h4>Bank Account System</h4>
+      </div>
+      <span class="q-marks">15 marks</span>
+    </div>
+    <p class="desc">Build a bank account class that supports deposits, withdrawals, and balance checking. The system must handle insufficient funds gracefully with an appropriate message.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Create class <code>BankAccount</code> with owner and balance attributes</li>
+        <li>Method <code>deposit(amount)</code> adds to balance</li>
+        <li>Method <code>withdraw(amount)</code> subtracts from balance, but checks for sufficient funds</li>
+        <li>Method <code>get_balance()</code> returns current balance</li>
+        <li>Demonstrate with example transactions including a failed withdrawal</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>Account: John
+Deposited: 500
+Balance: 500
+Withdrew: 200
+Balance: 300
+Insufficient funds for 500</div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 4</span>
+        <h4>Word Frequency Counter</h4>
+      </div>
+      <span class="q-marks">12 marks</span>
+    </div>
+    <p class="desc">Write a program that counts how many times each word appears in a given text. The program should display the top 5 most frequent words.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Accept a text string (hardcoded is acceptable)</li>
+        <li>Split the text into individual words</li>
+        <li>Count frequency of each word (case-insensitive)</li>
+        <li>Sort words by frequency in descending order</li>
+        <li>Display the top 5 words with their counts</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>Top 5 words:
+the: 4
+quick: 2
+brown: 2
+fox: 2
+jumps: 1</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 5</span>
+        <h4>Temperature Converter</h4>
+      </div>
+      <span class="q-marks">10 marks</span>
+    </div>
+    <p class="desc">Create a temperature converter that converts between Celsius, Fahrenheit, and Kelvin. Use separate functions for each conversion.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Function <code>celsius_to_fahrenheit(c)</code></li>
+        <li>Function <code>fahrenheit_to_celsius(f)</code></li>
+        <li>Function <code>celsius_to_kelvin(c)</code></li>
+        <li>Function <code>kelvin_to_celsius(k)</code></li>
+        <li>Demonstrate all conversions with example values</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>0C = 32.0F
+100C = 212.0F
+32F = 0.0C
+0C = 273.15K
+273.15K = 0.0C</div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 6</span>
+        <h4>To-Do List Manager</h4>
+      </div>
+      <span class="q-marks">12 marks</span>
+    </div>
+    <p class="desc">Build a to-do list application that allows adding tasks, marking them as complete, and listing all tasks with their current status.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Store tasks in a list, each task as a dictionary with 'task' and 'done'</li>
+        <li>Function <code>add_task(task)</code></li>
+        <li>Function <code>complete_task(index)</code></li>
+        <li>Function <code>list_tasks()</code> displays tasks</li>
+        <li>Show [✓] for completed and [ ] for pending tasks</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>[ ] Buy groceries
+[ ] Finish homework
+[✓] Call mom
+[✓] Pay bills</div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 7</span>
+        <h4>Student Report Card</h4>
+      </div>
+      <span class="q-marks">12 marks</span>
+    </div>
+    <p class="desc">Create a report card generator. Given a student's name and a dictionary of subjects with scores, calculate the average and assign a final grade.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Accept a student name and subject scores</li>
+        <li>Calculate the average score</li>
+        <li>Assign grade: A (90+), B (80-89), C (70-79), D (60-69), F (below 60)</li>
+        <li>Print a formatted report card listing all subjects and the final grade</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>Report Card: Alice
+Math: 92
+Science: 88
+English: 85
+Average: 88.33
+Grade: B</div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question">
+    <div class="question-head">
+      <div>
+        <span class="q-num">Question 8</span>
+        <h4>Inventory Management System</h4>
+      </div>
+      <span class="q-marks">12 marks</span>
+    </div>
+    <p class="desc">Build an inventory system for a small store. Track products with quantity and price. Support adding products, selling, restocking, and calculating total inventory value.</p>
+    <div class="req-list">
+      <span class="label">Requirements</span>
+      <ul>
+        <li>Class <code>Product</code> with name, quantity, and price</li>
+        <li>Class <code>Inventory</code> holding a list of products</li>
+        <li>Method <code>add_product(name, qty, price)</code></li>
+        <li>Method <code>sell(name, qty)</code> reduces quantity, errors if insufficient stock</li>
+        <li>Method <code>restock(name, qty)</code> increases quantity</li>
+        <li>Method <code>total_value()</code> returns the total value of all inventory</li>
+        <li>Method <code>show_inventory()</code> displays all products</li>
+      </ul>
+    </div>
+    <div class="sample"><span class="label">Sample Output</span>Added: Apples x10 @ R5
+Added: Bread x5 @ R15
+Sold: 3 Apples
+Restocked: 5 Bread
+Total value: R145
+Apples: 7 (R5)
+Bread: 10 (R15)</div>
+  </div>
+
+  <div class="paper-foot">
+    <strong>END OF EXAMINATION</strong><br>
+    Cre8Learn Institute · Python Programming · Practical Project Paper<br>
+    Total: 100 Marks · Duration: 1 Hour
+  </div>
+
+</div>
+
+<div class="controls-bar">
+  <button id="printBtn">🖨 print / save as PDF</button>
+</div>
+
+<script>
+  const ACCESS_CODE = "crl88pr";
+
+  const gate = document.getElementById('gate');
+  const paper = document.getElementById('paper');
+  const unlockBtn = document.getElementById('unlockBtn');
+  const accessInput = document.getElementById('accessCode');
+  const gateError = document.getElementById('gateError');
+
+  function tryUnlock() {
+    const val = accessInput.value.trim();
+    if (val === ACCESS_CODE) {
+      gate.style.display = 'none';
+      paper.style.display = 'block';
+      gateError.textContent = '';
+    } else {
+      gateError.textContent = 'invalid access code. try again.';
+      accessInput.value = '';
+      accessInput.focus();
+    }
+  }
+
+  unlockBtn.addEventListener('click', tryUnlock);
+  accessInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') tryUnlock();
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+</script>
+</body>
+</html>
